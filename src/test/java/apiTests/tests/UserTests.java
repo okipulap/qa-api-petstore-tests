@@ -6,12 +6,12 @@ import apiTests.models.user.User;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static apiTests.asserts.UserAssertions.assertUserFieldsMatch;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("PetStore API: пользователи")
@@ -25,20 +25,6 @@ public class UserTests {
 	@BeforeAll
 	public static void setUp() {
 		client = new UserClient();
-	}
-
-	private void assertUserFieldsMatch(User request, User response) {
-		SoftAssertions soft = new SoftAssertions();
-
-		soft.assertThat(request.getId()).isEqualTo(response.getId());
-		soft.assertThat(request.getUsername()).isEqualTo(response.getUsername());
-		soft.assertThat(request.getFirstName()).isEqualTo(response.getFirstName());
-		soft.assertThat(request.getLastName()).isEqualTo(response.getLastName());
-		soft.assertThat(request.getEmail()).isEqualTo(response.getEmail());
-		soft.assertThat(request.getPassword()).isEqualTo(response.getPassword());
-		soft.assertThat(request.getPhone()).isEqualTo(response.getPhone());
-		soft.assertThat(request.getUserStatus()).isEqualTo(response.getUserStatus());
-		soft.assertAll();
 	}
 
 	@Test

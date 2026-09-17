@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
+import static apiTests.asserts.PetAssertions.assertPetFieldsMatch;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,30 +36,6 @@ public class PetTests {
 	@BeforeAll
 	public static void setUp() {
 		client = new PetClient();
-	}
-
-	@Step("Проверка полей питомца")
-	private void assertPetFieldsMatch(Pet request, Pet response) {
-		SoftAssertions soft = new SoftAssertions();
-		soft.assertThat(request.getId())
-			.isEqualTo(response.getId());
-
-		soft.assertThat(request.getName())
-			.isEqualTo(response.getName());
-
-		soft.assertThat(request.getCategory())
-			.usingRecursiveComparison()
-			.isEqualTo(response.getCategory());
-
-		soft.assertThat(request.getTags())
-			.usingRecursiveComparison()
-			.isEqualTo(response.getTags());
-
-		soft.assertThat(request.getPhotoUrls())
-			.isNotEmpty()
-			.allMatch(url -> url.startsWith("https"));
-
-		soft.assertAll();
 	}
 
 	private static Stream<Arguments> invalidPetRequests() {

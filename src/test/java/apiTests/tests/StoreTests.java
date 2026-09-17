@@ -6,16 +6,13 @@ import apiTests.models.store.Order;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
-
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
+import static apiTests.asserts.StoreAssertions.assertsStoreFieldsMatch;
 
 @Epic("PetStore API: магазин")
 @Owner("Nikita Tkachenko")
@@ -27,21 +24,6 @@ public class StoreTests {
 	@BeforeAll
 	public static void setUp() {
 		client = new StoreClient();
-	}
-
-	private void assertOrderFieldsMatch(Order request, Order response) {
-		SoftAssertions soft = new SoftAssertions();
-
-		OffsetDateTime requestTime = OffsetDateTime.parse(request.getShipDate()).truncatedTo(ChronoUnit.MILLIS);
-		OffsetDateTime responseTime = OffsetDateTime.parse(response.getShipDate()).truncatedTo(ChronoUnit.MILLIS);
-
-		soft.assertThat(request.getId()).isEqualTo(response.getId());
-		soft.assertThat(request.getPetId()).isEqualTo(response.getPetId());
-		soft.assertThat(request.getQuantity()).isEqualTo(response.getQuantity());
-		soft.assertThat(requestTime).isEqualTo(responseTime);
-		soft.assertThat(request.getStatus()).isEqualTo(response.getStatus());
-		soft.assertThat(request.isComplete()).isEqualTo(response.isComplete());
-		soft.assertAll();
 	}
 
 	@Test
@@ -73,7 +55,7 @@ public class StoreTests {
 		Order response = client.postOrder(request);
 		createdOrders.add(response.getId());
 
-		assertOrderFieldsMatch(request, response);
+		assertsStoreFieldsMatch(request, response);
 	}
 
 	@Test
@@ -90,7 +72,7 @@ public class StoreTests {
 		Order getResponse = client.getOrderById(postResponse.getId());
 		createdOrders.add(getResponse.getId());
 
-		assertOrderFieldsMatch(postRequest, getResponse);
+		assertsStoreFieldsMatch(postRequest, getResponse);
 	}
 
 	@Test
