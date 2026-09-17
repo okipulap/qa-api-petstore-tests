@@ -63,7 +63,7 @@ public class UserTests {
 	@Tag("Smoke")
 	@DisplayName("Получение юзера")
 	@Severity(SeverityLevel.BLOCKER)
-	@Feature("Ручка API создания юзера")
+	@Feature("Ручка API получения юзера")
 	@Story("Юзер получает юзера")
 	void getUserWithStatus200() {
 		User request = UserFactory.randomUser();
@@ -108,7 +108,7 @@ public class UserTests {
 	@Tag("Negative")
 	@DisplayName("Получение юзера по несуществующему username")
 	@Severity(SeverityLevel.CRITICAL)
-	@Feature("Ручка API создания юзера")
+	@Feature("Ручка API получения юзера")
 	@Story("Юзер получает юзера")
 	void getUserExpected404() {
 		Response getResponse = client.getUserExpected404(FAKE_USERNAME);

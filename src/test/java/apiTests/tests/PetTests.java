@@ -2,7 +2,8 @@ package apiTests.tests;
 
 import apiTests.base.PetClient;
 import apiTests.factories.PetFactory;
-import apiTests.models.*;
+import apiTests.models.ApiResponse;
+import com.github.okipulap.apiTests.models.*;
 import apiTests.models.pet.Pet;
 import io.qameta.allure.*;
 import io.restassured.response.Response;

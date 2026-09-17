@@ -4,8 +4,8 @@ plugins {
     id("checkstyle")
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "com.github.okipulap"
+version = "0.1.0"
 
 val allureVersion = "2.35.3"
 val checkstyleVersion = "10.26.1"
