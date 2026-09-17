@@ -6,6 +6,7 @@ import apiTests.models.pet.Pet;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,34 +33,53 @@ public class PetScenario {
 	@DisplayName("E2E-сценарий: жизненный цикл питомца")
 	@Feature("Питомец")
 	void petScenario() {
-		// Создание питомца
 		Pet petPostRequest = PetFactory.createPet("available");
-		Pet petPostResponse = client.createPet(petPostRequest);
-		assertPetFieldsMatch(petPostRequest, petPostResponse);
+		Pet petPostResponse = createPet(petPostRequest);
 
-		// Получение питомца
-		Pet petGetResponse = client.getPetById(petPostResponse.getId());
-		assertPetFieldsMatch(petPostResponse, petGetResponse);
+		getPetById(petPostResponse.getId(), petPostResponse);
 
-		// Изменение питомца
 		Pet petPutRequest =
 			PetFactory.updatePet(
 				petPostResponse.getId(), "Updated " + petPostResponse.getName(), "sold");
+		Pet petPutResponse = updatePet(petPutRequest);
+
+		getPetById(petPutResponse.getId(), petPutRequest);
+
+		deletePet(petPutResponse.getId());
+
+		getPetExpected404(petPutResponse.getId());
+	}
+
+	@Step("Создание питомца")
+	private Pet createPet(Pet petPostRequest) {
+		Pet petPostResponse = client.createPet(petPostRequest);
+		assertPetFieldsMatch(petPostRequest, petPostResponse);
+		return petPostResponse;
+	}
+
+	@Step("Получение созданного питомца по ID: {id}")
+	private Pet getPetById(Long id, Pet expected) {
+		Pet petGetResponse = client.getPetById(id);
+		assertPetFieldsMatch(expected, petGetResponse);
+		return petGetResponse;
+	}
+
+	@Step("Изменение питомца")
+	private Pet updatePet(Pet petPutRequest) {
 		Pet petPutResponse = client.putPet(petPutRequest);
 		assertPetFieldsMatch(petPutRequest, petPutResponse);
+		return petPutResponse;
+	}
 
-		// Получение после изменения
-		Pet petGetAfterUpdateResponse = client.getPetById(petPutResponse.getId());
-		assertPetFieldsMatch(petPutRequest, petGetAfterUpdateResponse);
-
-		// Удаление питомца
-		Response petDeleteResponse =
-			client.deletePet(petGetAfterUpdateResponse.getId());
+	@Step("Удаление питомца по ID: {id}")
+	private void deletePet(Long id) {
+		Response petDeleteResponse = client.deletePet(id);
 		assertEquals(HttpStatus.SC_OK, petDeleteResponse.getStatusCode());
+	}
 
-		// Получение питомца после удаления
-		Response getAfterDeleteResponse =
-			client.getPetExpected404(petGetAfterUpdateResponse.getId());
+	@Step("Проверка отсутствия питомца после удаления по ID: {id}")
+	private void getPetExpected404(Long id) {
+		Response getAfterDeleteResponse = client.getPetExpected404(id);
 		assertEquals(HttpStatus.SC_NOT_FOUND, getAfterDeleteResponse.getStatusCode());
 	}
 }
