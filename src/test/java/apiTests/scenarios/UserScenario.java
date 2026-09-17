@@ -12,7 +12,7 @@ import org.junit.jupiter.api.*;
 import static apiTests.asserts.UserAssertions.assertUserFieldsMatch;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Epic("Petstore API: Пользовательские сценарии")
+@Epic("Petstore API: пользовательские сценарии")
 @Owner("Nikita Tkachenko")
 public class UserScenario {
 	private static UserClient client;

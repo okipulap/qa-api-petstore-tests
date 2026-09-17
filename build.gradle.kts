@@ -99,3 +99,11 @@ tasks.register<Test>("regressionTest") {
 	description = "Полный регресс"
 }
 
+tasks.register<Test>("e2eTest") {
+	useJUnitPlatform() {
+		includeTags("E2E")
+	}
+	group = "verification"
+	description = "Набор сквозных E2E-сценариев"
+}
+
